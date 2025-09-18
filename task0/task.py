@@ -1,5 +1,3 @@
-import numpy as np
-
 def main(content):
     new_list = []
     for item in content:
@@ -8,7 +6,7 @@ def main(content):
     
     n = max(new_list)
 
-    matrix = np.zeros((n, n), int)
+    matrix = [[0] * n for i in range (n)]
 
     for i in range (0, len(new_list), 2):
         f_idx = new_list[i] - 1
