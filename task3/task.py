@@ -1,5 +1,5 @@
-#from collections import defaultdict
 import numpy as np
+
 
 def parse(s: str) -> dict:
     index_map = {}
@@ -32,13 +32,14 @@ def parse(s: str) -> dict:
                 index_map[tok] = index
                 index += 1
             # не делаем i += 1 здесь — цикл продолжит с текущей позиции
-    return index_map   
+    return index_map
+
 
 def matrix(index_map, elements):
     n = len(elements)
-    
-    matrix = np.zeros((n,n),bool)
-    
+
+    matrix = np.zeros((n, n), bool)
+
     for first_idx_elem in range(n):
         first_idx_map = index_map[elements[first_idx_elem]]
 
@@ -47,40 +48,38 @@ def matrix(index_map, elements):
 
             if first_idx_map <= second_idx_map:
                 matrix[first_idx_elem][second_idx_elem] = 1
-    
-    return matrix
-    
-    
-    
 
-def main(s1: str, s2: str) -> str: 
+    return matrix
+
+
+def main(s1: str, s2: str) -> str:
     elements = [item.strip(',[]') for item in s1.split(',')]
-    
+
     index_map_A = parse(s1)
     index_map_B = parse(s2)
 
-    #Матрицы отношений
+    # Матрицы отношений
     matrix_A = matrix(index_map_A, elements)
     matrix_B = matrix(index_map_B, elements)
-    
-    #Транспонированные матрицы отношений
+
+    # Транспонированные матрицы отношений
     matrix_AT = matrix_A.T
     matrix_BT = matrix_B.T
-    
-    #Поэлементная конъюнкция
+
+    # Поэлементная конъюнкция
     matrix_AB = matrix_A * matrix_B
-    matrix_ABT = matrix_AT * matrix_BT 
-    
-    #Поэлементная дизъюнкция
+    matrix_ABT = matrix_AT * matrix_BT
+
+    # Поэлементная дизъюнкция
     matrix_dis = matrix_AB + matrix_ABT
-    
-    #Нахождение нулевых элементов в результирующей матрице
+
+    # Нахождение нулевых элементов в результирующей матрице
     false_coords = list(zip(*np.where(~matrix_dis)))
     unique_pairs_index = {tuple(sorted(p)) for p in false_coords}
     result = [(elements[i], elements[j]) for i, j in unique_pairs_index]
 
     return result
-    
+
 
 str1 = "1,[2,3],4,[5,6,7],8,9,10"
 str2 = "[1,2],[3,4,5],6,7,9,[8,10]"
